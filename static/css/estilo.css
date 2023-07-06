@@ -1,0 +1,247 @@
+/* login cadastr detalhes */
+
+.paglogin-form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.paglogin-form-box {
+    background: linear-gradient(to top right, white, lightgray);
+    padding: 20px;
+    border-radius: 20px;
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
+.paglogin-form-box label,
+.paglogin-form-box input,
+.paglogin-form-box button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.paglogin-form-box label {
+    color: black;
+    font-weight: bold;
+    text-align: center;
+}
+
+.paglogin-form-box input,
+.paglogin-form-box button {
+    border-radius: 10px;
+}
+
+.paglogin-form-box button {
+    background: linear-gradient(to right, #1e3d59, #3a506b);
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+.paglogin-form-box select {
+    display: block;
+    margin: 0 auto;
+}
+/* distribuidores cadastro e edição de avaliacoes*/
+.paglogin-form-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.paglogin-form-box {
+    background: linear-gradient(to top right, white, lightgray);
+    padding: 20px;
+    border-radius: 20px;
+    max-height: 100vh;
+    overflow-y: auto;
+}
+
+.paglogin-form-box label,
+.paglogin-form-box input,
+.paglogin-form-box button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.paglogin-form-box label {
+    color: black;
+    font-weight: bold;
+    text-align: center;
+}
+
+.paglogin-form-box input,
+.paglogin-form-box button {
+    border-radius: 10px;
+}
+
+.paglogin-form-box button {
+    background: linear-gradient(to right, #1e3d59, #3a506b);
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+}
+
+.paglogin-form-box select {
+    display: block;
+    margin: 0 auto;
+}
+
+
+
+/* distribuidores */
+
+.pagdist-btn-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.pagdist-btn-container .pagdist-btn {
+    margin: 10px 0;
+    width: 200px;
+}
+
+.pagdist-btn {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    background: linear-gradient(to right, #89c4f4, #b2beb5);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.pagdist-btn-distributor {
+    background: linear-gradient(to top right, turquoise, #0047ab);
+    color: white;
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+.pagdist-btn-distributor:hover {
+    background: linear-gradient(to top right, turquoise, #0047ab);
+}
+
+/* avaliadores */
+
+.pagaval-btn {
+    display: inline-block;
+    margin: 0 10px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    background: linear-gradient(to right, #89c4f4, #b2beb5);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.pagaval-btn-distributor {
+    background: linear-gradient(to top right, turquoise, #0047ab);
+    color: white;
+    width: 200px;
+    margin-bottom: 10px;
+}
+
+.pagaval-btn-distributor:hover {
+    background: linear-gradient(to top right, turquoise, #0047ab);
+}
+
+/* arquivos */
+.geralarq {
+    background-color: #e6e6e6;
+    border: 1px solid #b3b3b3;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: black;
+}
+
+.geralarq:hover {
+    background-color: #d9d9d9;
+}
+
+/* botoes da base */
+.base-nav {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 40px;
+    background-image: linear-gradient(to bottom right, #00FFFF, #00008B);
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+
+.base-button {
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-left: 10px;
+}
+
+.base-button:hover {
+    color: #ccc;
+}
+
+.home-button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-left: 10px;
+}
+
+.home-button:hover {
+  background-color: #3e8e41; /* Dark green */
+}
+
+.logout-button {
+    background-color: #f44336; /* Red */
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.logout-button:hover {
+  background-color:#d32f2f; /* Dark red */
+}
+
+.profile-button {
+    background-color:#008CBA; /* Blue */
+    border:none;
+    color:white;
+    padding:10px 20px;
+    text-align:center;
+    text-decoration:none;
+    display:inline-block
+}
+
+.profile-button:hover {
+  background-color:#006080; /* Dark blue */
+}
+

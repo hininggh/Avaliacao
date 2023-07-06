@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+    <div class="paglogin-form-container">
+        <div class="paglogin-form-box">
+            <h1>Detalhes do Usuário</h1>
+            <p><strong>Nome:</strong> {{ usuario.name }}</p>
+            <p><strong>Tipo de usuário:</strong> {{ usuario.get_user_type_display }}</p>
+            <p><strong>Email:</strong> {{ usuario.email }}</p>
+            <p><strong>Formação acadêmica:</strong> {{ usuario.formacao_academica }}</p>
+            {% if usuario == request.user %}
+                <a class="geral" href="{% url 'contas:editar_perfil' %}">Editar perfil</a>
+            {% endif %}
+            <h2>Avaliações</h2>
+            <ul>
+                {% for avaliacao in avaliacoes %}
+                    {% if request.user.user_type == 'distribuidor' %}
+                        <li><a href="{% url 'avaliacoes:distribuidor_detalhes_avaliacao_arquivos' avaliador.id avaliacao.id %}">{{ avaliacao.nome }}</a></li>
+                    {% elif request.user.user_type == 'avaliador' %}
+                        <li><a href="{% url 'avaliacoes:avaliador_detalhes_avaliacao' avaliador.id avaliacao.id %}">{{ avaliacao.nome }}</a></li>
+                    {% else %}
+                        <li>{{ avaliacao.nome }}</li>
+                    {% endif %}
+                {% empty %}
+                    <li>Nenhuma avaliação encontrada.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

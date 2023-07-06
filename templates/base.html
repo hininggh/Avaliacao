@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Projeto Avaliação</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/estilo.css' %}">
+</head>
+<body class="{% if user.is_authenticated %}logado{% endif %} tudoestilo" style="background-image: url(
+    {% if user.is_authenticated and user.user_type == 'avaliador' %}
+        {% static 'images/fundoavaliador.jpg' %}
+    {% elif user.is_authenticated %}
+        {% static 'images/fundodistribuidor.jpg' %}
+    {% else %}
+        {% static 'images/login.jpg' %}
+    {% endif %}
+); background-size: cover; background-repeat: no-repeat;">
+    <header class="base">
+        <div class="base-gradient"></div>
+        <nav class="base-nav">
+            <a class="base-button" href="{% url 'contas:detalhes_usuario' request.user.pk %}">Perfil</a>
+            {% if user.is_authenticated %}
+                <a class="base-button" href="{% url 'avaliacoes:home' %}">Home</a>
+                <a class="base-button" href="{% url 'contas:logout' %}">Deslogar</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <script>
+        function confirmDelete() {
+            return confirm('Tem certeza que deseja deletar este item?');
+        }
+    </script>
+</body>
+</html>

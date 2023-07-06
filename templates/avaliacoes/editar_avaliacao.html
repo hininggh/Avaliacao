@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Editar avaliação</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Salvar</button>
+    </form>
+
+    <h2>Indicadores</h2>
+    {% for dimensao, indicadores in indicadores_por_dimensao.items %}
+        <h3>{{ dimensao }}</h3>
+        {% for indicador in indicadores %}
+            <p>{{ indicador.nome }} - 
+                <a href="{% url 'avaliacoes:editar_indicador' indicador.id %}">Editar</a> - 
+                <a href="{% url 'avaliacoes:excluir_indicador' indicador.id %}">Excluir</a>
+            </p>
+        {% endfor %}
+    {% endfor %}
+
+    <a href="{% url 'avaliacoes:excluir_avaliacao' avaliacao.id %}">Excluir tudo</a>
+{% endblock %}

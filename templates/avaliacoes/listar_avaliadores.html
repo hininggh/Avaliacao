@@ -1,0 +1,13 @@
+{# listar_avaliadores.html #}
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Avaliadores</h1>
+    <ul>
+        {% for avaliador in avaliadores %}
+            <li><a href="{% url 'contas:perfil_detalhes' avaliador.pk %}">{{ avaliador.name }}</a></li>
+        {% empty %}
+            <li>Nenhum avaliador encontrado.</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

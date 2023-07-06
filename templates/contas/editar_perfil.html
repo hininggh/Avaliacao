@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+    <div class="paglogin-form-container">
+        <div class="paglogin-form-box">
+            <h1>Editar Perfil</h1>
+            <form method="post" action="{% url 'contas:editar_perfil' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Salvar</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

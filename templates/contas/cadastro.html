@@ -1,0 +1,19 @@
+{% load static %}
+{% block content %}
+    <style>
+        body {
+            background-image: url("{% static 'images/fundologin.jpg' %}");
+        }
+    </style>
+    <link rel="stylesheet" href="{% static 'css/estilo.css' %}">
+    <div class="paglogin-form-container">
+        <div class="paglogin-form-box">
+            <h1>Cadastro</h1>
+            <form method="post" action="{% url 'contas:cadastro' %}">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Cadastrar</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

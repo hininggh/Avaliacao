@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load templatetags %}
+
+{% block extrahead %}
+    <style>
+        input[type="file"] {
+            display: none;
+        }
+        .custom-file-upload {
+            border: 1px solid #ccc;
+            display: inline-block;
+            padding: 6px 12px;
+            cursor: pointer;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>{{ avaliacao.nome }}</h1>
+    <p>Inscrição: {{ avaliacao.inscricao }}</p>
+    <p>Data de criação: {{ avaliacao.data_criacao }}</p>
+    <p>Distribuidor: <a href="{% url 'contas:detalhes_usuario' pk=avaliacao.distribuidor.id %}">{{ avaliacao.distribuidor.name }}</a></p>
+
+    <h2>Capa da Avaliação</h2>
+    {% if capa %}
+        <p><a href="{% url 'avaliacoes:baixar_capa' capa.id %}">Baixar Capa</a></p>
+        <form action="{% url 'avaliacoes:substituir_capa' capa.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="capa" class="custom-file-upload">Substituir Capa</label>
+            <input type="file" id="capa" name="capa" onchange="this.form.submit()">
+        </form>
+        <form action="{% url 'avaliacoes:apagar_capa' capa.id %}" method="post">
+            {% csrf_token %}
+            <input type="submit" value="Apagar Capa">
+        </form>
+    {% else %}
+        <form action="{% url 'avaliacoes:enviar_capa' avaliacao.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label for="capa" class="custom-file-upload">Enviar Capa</label>
+            <input type="file" id="capa" name="capa" onchange="this.form.submit()">
+        </form>
+    {% endif %}
+
+    <h2>Organização Didático-Pedagógico</h2>
+    {% for indicador in indicadores %}
+        {% if indicador.dimensao == 'Organização Didático-Pedagógico' %}
+            <div style="display: flex; align-items: center;">
+                <p style="margin-right: 10px;">{{ indicador.nome }}</p>
+                {% with arquivos_indicadores|get_arquivo_indicador:indicador as arquivo %}
+                    {% if arquivo %}
+                        <p><a href="{% url 'avaliacoes:baixar_arquivo' arquivo.id %}">Baixar Arquivo</a></p>
+                        <form action="{% url 'avaliacoes:substituir_arquivo' arquivo.id %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <label for="{{ indicador.id }}" class="custom-file-upload">Substituir Arquivo</label>
+                            <input type="file" id="{{ indicador.id }}" name="arquivo" onchange="this.form.submit()">
+                        </form>
+                        <form action="{% url 'avaliacoes:apagar_arquivo' arquivo.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Apagar Arquivo">
+                        </form>
+                    {% else %}
+                        <form action="{% url 'avaliacoes:enviar_arquivo' indicador.id %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <label for="{{ indicador.id }}" class="custom-file-upload">Enviar Arquivo</label>
+                            <input type="file" id="{{ indicador.id }}" name="arquivo" onchange="this.form.submit()">
+                        </form>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    <h2>Corpo Docente e Tutorial</h2>
+    {% for indicador in indicadores %}
+        {% if indicador.dimensao == 'Corpo Docente e Tutorial' %}
+            <div style="display: flex; align-items: center;">
+                <p style="margin-right: 10px;">{{ indicador.nome }}</p>
+                {% with arquivos_indicadores|get_arquivo_indicador:indicador as arquivo %}
+                    {% if arquivo %}
+                        <p><a href="{% url 'avaliacoes:baixar_arquivo' arquivo.id %}">Baixar Arquivo</a></p>
+                        <form action="{% url 'avaliacoes:substituir_arquivo' arquivo.id %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <label for="{{ indicador.id }}" class="custom-file-upload">Substituir Arquivo</label>
+                            <input type="file" id="{{ indicador.id }}" name="arquivo" onchange="this.form.submit()">
+                        </form>
+                        <form action="{% url 'avaliacoes:apagar_arquivo' arquivo.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Apagar Arquivo">
+                        </form>
+                    {% else %}
+                        <form action="{% url 'avaliacoes:enviar_arquivo' indicador.id %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <label for="{{ indicador.id }}" class="custom-file-upload">Enviar Arquivo</label>
+                            <input type="file" id="{{ indicador.id }}" name="arquivo" onchange="this.form.submit()">
+                        </form>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    <h2>Infraestrutura</h2>
+    {% for indicador in indicadores %}
+        {% if indicador.dimensao == 'Infraestrutura' %}
+            <div style="display: flex; align-items: center;">
+                <p style="margin-right: 10px;">{{ indicador.nome }}</p>
+                {% with arquivos_indicadores|get_arquivo_indicador:indicador as arquivo %}
+                    {% if arquivo %}
+                        <p><a href="{% url 'avaliacoes:baixar_arquivo' arquivo.id %}">Baixar Arquivo</a></p>
+                        <form action="{% url 'avaliacoes:substituir_arquivo' arquivo.id %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <label for="{{ indicador.id }}" class="custom-file-upload">Substituir Arquivo</label>
+                            <input type="file" id="{{ indicador.id }}" name="arquivo" onchange="this.form.submit()">
+                        </form>
+                        <form action="{% url 'avaliacoes:apagar_arquivo' arquivo.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Apagar Arquivo">
+                        </form>
+                    {% else %}
+                        <form action="{% url 'avaliacoes:enviar_arquivo' indicador.id %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <label for="{{ indicador.id }}" class="custom-file-upload">Enviar Arquivo</label>
+                            <input type="file" id="{{ indicador.id }}" name="arquivo" onchange="this.form.submit()">
+                        </form>
+                    {% endif %}
+                {% endwith %}
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

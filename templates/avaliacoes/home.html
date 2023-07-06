@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Bem-vindo, {{ user.username }}!</h1>
+    {% if user.user_type == 'distribuidor' %}
+        <h2>Distribuidor</h2>
+        <a href="{% url 'avaliacoes:criar_avaliacao' %}">Criar avaliação</a><br>
+        <a href="{% url 'avaliacoes:listar_avaliadores' %}">Ver avaliadores cadastrados</a><br>
+        <h3>Minhas avaliações:</h3>
+        <ul>
+            {% for avaliacao in avaliacoes %}
+                <li><a href="{% url 'avaliacoes:distribuidor_detalhes_avaliacao' avaliacao.id %}">{{ avaliacao.nome }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <h2>Avaliador</h2>
+        <h3>Minhas avaliações:</h3>
+        <ul>
+            {% for avaliacao in avaliacoes %}
+                <li><a href="{% url 'avaliacoes:avaliador_detalhes_avaliacao' avaliacao.id %}">{{ avaliacao.nome }}</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
+

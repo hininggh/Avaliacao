@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ avaliacao.nome }}</h1>
+<p>Inscrição: {{ avaliacao.inscricao }}</p>
+<p>Data de criação: {{ avaliacao.data_criacao }}</p>
+
+<h2>Avaliadores</h2>
+<ul>
+    {% for avaliador in avaliadores %}
+        <li><a href="{% url 'avaliacoes:distribuidor_detalhes_avaliacao_arquivos' avaliador.id avaliacao.id %}">{{ avaliador.name }}</a></li>
+    {% endfor %}
+</ul>
+
+<p><a href="{% url 'avaliacoes:editar_avaliacao' avaliacao.id %}">Editar</a></p>
+
+<h2>Indicadores</h2>
+{% for dimensao, indicadores in indicadores_por_dimensao.items %}
+    <h3>{{ dimensao }}</h3>
+    {% for indicador in indicadores %}
+        <h4>{{ indicador.nome }}</h4>
+    {% endfor %}
+{% endfor %}
+
+<p><a href="{% url 'avaliacoes:criar_indicador' avaliacao.id %}">Editar Indicadores</a></p>
+{% endblock %}
