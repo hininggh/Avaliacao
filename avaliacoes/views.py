@@ -4,10 +4,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .models import Avaliacao, Indicador, ArquivoIndicador, CapaAvaliacao
 from .forms import AvaliacaoForm, IndicadorForm, ArquivoIndicadorForm, CapaAvaliacaoForm
-from PyPDF2 import PdfFileMerger
 from contas.models import CustomUser
 from django.http import HttpResponse
 from django.http import FileResponse
+from PyPDF2 import PdfMerger
+from io import BytesIO
+
 
 
 @login_required
@@ -27,13 +29,10 @@ def criar_avaliacao(request):
             avaliacao = form.save(commit=False)
             avaliacao.distribuidor = request.user
             avaliacao.save()
-            form.save_m2m()
-            messages.success(request, 'Avaliação criada com sucesso!')
-            return redirect('avaliacoes:exibir_criar_indicador', avaliacao.id)
+            return redirect('avaliacoes:exibir_copiar_indicadores', avaliacao.id)
     else:
         form = AvaliacaoForm()
-    avaliacoes = Avaliacao.objects.filter(distribuidor=request.user)
-    return render(request, 'avaliacoes/criar_avaliacao.html', {'form': form, 'avaliacoes': avaliacoes})
+    return render(request, 'avaliacoes/criar_avaliacao.html', {'form': form})
 
 @login_required
 def detalhes_avaliacao(request, avaliacao_id, avaliador_id=None):
@@ -80,19 +79,18 @@ def excluir_avaliacao(request, avaliacao_id):
     avaliacao = get_object_or_404(Avaliacao, id=avaliacao_id)
     if request.user != avaliacao.distribuidor:
         messages.error(request, 'Você não tem permissão para excluir esta avaliação.')
-        return redirect('avaliacoes:home')
-    if request.method == 'POST':
-        # Excluir arquivos e capas relacionados
-        for indicador in avaliacao.indicadores.all():
-            for arquivo in indicador.arquivos.all():
-                arquivo.delete()
-        for capa in avaliacao.capas.all():
-            capa.delete()
-        # Excluir avaliação
-        avaliacao.delete()
-        messages.success(request, 'Avaliação excluída com sucesso!')
-        return redirect('avaliacoes:home')
-    return render(request, 'avaliacoes/excluir_avaliacao.html', {'avaliacao': avaliacao})
+        return redirect('avaliacoes:editar_avaliacao', avaliacao_id=avaliacao.id)
+    # Excluir arquivos e capas relacionados
+    for indicador in avaliacao.indicadores.all():
+        for arquivo in indicador.arquivos.all():
+            arquivo.delete()
+        indicador.delete()
+    for capa in avaliacao.capas.all():
+        capa.delete()
+    # Excluir avaliação
+    avaliacao.delete()
+    messages.success(request, 'Avaliação excluída com sucesso!')
+    return redirect('avaliacoes:home')
 
 
 @login_required
@@ -229,8 +227,8 @@ def excluir_indicador(request, indicador_id):
         # Excluir indicador
         indicador.delete()
         messages.success(request, 'Indicador excluído com sucesso!')
-        return redirect('avaliacoes:detalhes_avaliacao', indicador.avaliacao.id)
-    return render(request, 'avaliacoes/excluir_indicador.html', {'indicador': indicador})
+        return redirect('avaliacoes:criar_indicador', avaliacao_id=indicador.avaliacao.id)
+    return render(request, 'avaliacoes/criar_indicador.html', {'indicador': indicador})
 
 
 @login_required
@@ -241,6 +239,14 @@ def exibir_criar_indicador(request, avaliacao_id):
         return redirect('avaliacoes:home')
     return render(request, 'avaliacoes/criar_indicador.html', {'avaliacao': avaliacao})
 
+@login_required
+def exibir_copiar_indicadores(request, avaliacao_id):
+    avaliacao = get_object_or_404(Avaliacao, id=avaliacao_id)
+    if request.user != avaliacao.distribuidor:
+        messages.error(request, 'Você não tem permissão para copiar os indicadores desta avaliação.')
+        return redirect('avaliacoes:home')
+    avaliacoes = Avaliacao.objects.filter(distribuidor=request.user).exclude(id=avaliacao.id)
+    return render(request, 'avaliacoes/copiar_indicadores.html', {'avaliacao': avaliacao, 'avaliacoes': avaliacoes})
 
 @login_required
 def copiar_indicadores(request, avaliacao_id):
@@ -257,6 +263,7 @@ def copiar_indicadores(request, avaliacao_id):
         messages.success(request, 'Indicadores copiados com sucesso!')
     return redirect('avaliacoes:detalhes_avaliacao', avaliacao.id)
 
+
 @login_required
 def editar_indicador(request, indicador_id):
     indicador = get_object_or_404(Indicador, id=indicador_id)
@@ -269,7 +276,7 @@ def editar_indicador(request, indicador_id):
             indicador.nome = nome
             indicador.save()
             messages.success(request, 'Indicador atualizado com sucesso!')
-    return redirect('avaliacoes:detalhes_avaliacao', indicador.avaliacao.id)
+    return redirect('avaliacoes:criar_indicador', avaliacao_id=indicador.avaliacao.id)
 
 #arquivos
 @login_required
@@ -277,16 +284,20 @@ def baixar_arquivo_distribuidor(request, arquivo_id):
     arquivo = get_object_or_404(ArquivoIndicador, id=arquivo_id)
     capa = CapaAvaliacao.objects.filter(avaliacao=arquivo.indicador.avaliacao, avaliador=arquivo.avaliador).first()
     if capa:
-        merger = PdfFileMerger()
+        merger = PdfMerger()
         merger.append(capa.capa.path)
         merger.append(arquivo.arquivo.path)
-        response = FileResponse(merger, content_type='application/pdf')
+        merged_pdf = BytesIO()
+        merger.write(merged_pdf)
+        merged_pdf.seek(0)
+        response = FileResponse(merged_pdf, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename={arquivo.arquivo.name}'
         return response
     else:
         response = FileResponse(arquivo.arquivo, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename={arquivo.arquivo.name}'
         return response
+
 
 @login_required
 def enviar_capa(request, avaliacao_id):

@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Copiar indicadores</h1>
+    <p>Avaliação: {{ avaliacao.nome }}</p>
+    <p>Inscrição: {{ avaliacao.inscricao }}</p>
+    <p>Data de criação: {{ avaliacao.data_criacao }}</p>
+
+   <h3>
+    <a href="{% url 'avaliacoes:excluir_avaliacao' avaliacao.id %}" onclick="return confirm('Tem certeza que deseja cancelar a criação desta avaliação?')">Cancelar criação</a>
+   </h3>
+    <h3>
+    <a href="{% url 'avaliacoes:criar_indicador' avaliacao.id %}">Vá direto para a criação de novos indicadores</a>
+    <h2/>
+
+<h2>Copiar indicadores de outra avaliação</h2>
+    <ul>
+        {% for avaliacao in avaliacoes %}
+            <li>
+                {{ avaliacao.nome }}
+                <a href="{% url 'avaliacoes:copiar_indicadores' avaliacao.id %}">Copiar indicadores</a>
+            </li>
+        {% endfor %}
+    </ul>
+
+
+{% endblock %}

@@ -7,13 +7,5 @@
         {{ form.as_p }}
         <button type="submit">Salvar e ir para criação de indicadores</button>
     </form>
-    <h2>Copiar indicadores de outra avaliação</h2>
-    <ul>
-        {% for avaliacao in avaliacoes %}
-            <li>
-                {{ avaliacao.nome }}
-                <a href="{% url 'avaliacoes:copiar_indicadores' avaliacao.id %}">Copiar indicadores</a>
-            </li>
-        {% endfor %}
-    </ul>
+
 {% endblock %}

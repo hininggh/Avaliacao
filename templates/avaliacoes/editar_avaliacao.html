@@ -19,5 +19,5 @@
         {% endfor %}
     {% endfor %}
 
-    <a href="{% url 'avaliacoes:excluir_avaliacao' avaliacao.id %}">Excluir tudo</a>
+    <a href="{% url 'avaliacoes:excluir_avaliacao' avaliacao.id %}" onclick="return confirm('Tem certeza que deseja excluir esta avaliação?')">Excluir tudo</a>
 {% endblock %}
