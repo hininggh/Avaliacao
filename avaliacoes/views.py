@@ -201,7 +201,7 @@ def criar_indicador(request, avaliacao_id):
             indicador.avaliacao = avaliacao
             indicador.save()
             messages.success(request, 'Indicador criado com sucesso!')
-            return redirect('avaliacoes:criar_indicador', avaliacao_id=avaliacao_id)
+            return redirect('avaliacoes:exibir_criar_indicador', avaliacao_id=avaliacao_id)
     else:
         form = IndicadorForm(initial={'avaliacao': avaliacao})
 
