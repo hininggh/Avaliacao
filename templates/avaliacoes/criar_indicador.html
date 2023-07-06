@@ -5,35 +5,29 @@
     <h2>{{ avaliacao.nome }}</h2>
     <a href="{% url 'avaliacoes:editar_avaliacao' avaliacao.id %}">Editar avaliação</a>
 
-
-    <!-- Caixa para criar um novo indicador -->
+    <!-- Formulário para criar um novo indicador -->
     <h3>Novo indicador</h3>
     <form action="{% url 'avaliacoes:criar_indicador' avaliacao.id %}" method="post">
         {% csrf_token %}
-        <label for="nome">Nome:</label>
-        <input type="text" id="nome" name="nome">
-        <br>
-        <label for="dimensao">Dimensão:</label>
-        <select id="dimensao" name="dimensao">
-            <option value="Organização Didático-Pedagógico">Organização Didático-Pedagógico</option>
-            <option value="Corpo Docente e Tutorial">Corpo Docente e Tutorial</option>
-            <option value="Infraestrutura">Infraestrutura</option>
-        </select>
-        <br>
-        <input type="submit" value="Salvar">
+        {{ form.as_p }}
+        <button type="submit">Salvar Indicador</button>
     </form>
 
-    <!-- Lista de indicadores por dimensão -->
-    <h3>Indicadores</h3>
+    <!-- Sessões de indicadores por dimensão -->
     {% for dimensao, indicadores in indicadores_por_dimensao.items %}
-        <h4>{{ dimensao }}</h4>
-        <ul>
-            {% for indicador in indicadores %}
-                <li>{{ indicador.nome }} -
-                    <a href="{% url 'avaliacoes:editar_indicador' indicador.id %}">Editar</a> -
-                    <a href="{% url 'avaliacoes:excluir_indicador' indicador.id %}" onclick="return confirm('Tem certeza que deseja excluir este indicador?')">Excluir</a>
-                </li>
-            {% endfor %}
-        </ul>
+        <h3>{{ dimensao }}</h3>
+        {% for indicador in indicadores %}
+            <div>
+                <form action="{% url 'avaliacoes:editar_indicador' indicador.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="text" name="nome" value="{{ indicador.nome }}">
+                    <button type="submit">Salvar</button>
+                </form>
+                <form action="{% url 'avaliacoes:excluir_indicador' indicador.id %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit">Excluir</button>
+                </form>
+            </div>
+        {% endfor %}
     {% endfor %}
 {% endblock %}

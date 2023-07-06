@@ -195,12 +195,31 @@ def criar_indicador(request, avaliacao_id):
         return redirect('avaliacoes:home')
 
     if request.method == 'POST':
-        # Cria um novo indicador com os dados do formulário
-        nome = request.POST['nome']
-        dimensao = request.POST['dimensao']
-        Indicador.objects.create(nome=nome, dimensao=dimensao, avaliacao=avaliacao)
+        form = IndicadorForm(request.POST)
+        if form.is_valid():
+            indicador = form.save(commit=False)
+            indicador.avaliacao = avaliacao
+            indicador.save()
+            messages.success(request, 'Indicador criado com sucesso!')
+            return redirect('avaliacoes:criar_indicador', avaliacao_id=avaliacao_id)
+    else:
+        form = IndicadorForm(initial={'avaliacao': avaliacao})
 
-    # Obtém os indicadores por dimensão
+    return render(request, 'avaliacoes/criar_indicador.html', {
+        'avaliacao': avaliacao,
+        'form': form,
+    })
+
+
+
+
+@login_required
+def exibir_criar_indicador(request, avaliacao_id):
+    avaliacao = get_object_or_404(Avaliacao, id=avaliacao_id)
+    if request.user != avaliacao.distribuidor:
+        messages.error(request, 'Você não tem permissão para criar indicadores nesta avaliação.')
+        return redirect('avaliacoes:home')
+
     indicadores = Indicador.objects.filter(avaliacao=avaliacao)
     indicadores_por_dimensao = {}
     for indicador in indicadores:
@@ -212,7 +231,6 @@ def criar_indicador(request, avaliacao_id):
         'avaliacao': avaliacao,
         'indicadores_por_dimensao': indicadores_por_dimensao,
     })
-
 
 @login_required
 def excluir_indicador(request, indicador_id):
@@ -227,17 +245,21 @@ def excluir_indicador(request, indicador_id):
         # Excluir indicador
         indicador.delete()
         messages.success(request, 'Indicador excluído com sucesso!')
-        return redirect('avaliacoes:criar_indicador', avaliacao_id=indicador.avaliacao.id)
-    return render(request, 'avaliacoes/criar_indicador.html', {'indicador': indicador})
-
+    return redirect('avaliacoes:exibir_criar_indicador', avaliacao_id=indicador.avaliacao.id)
 
 @login_required
-def exibir_criar_indicador(request, avaliacao_id):
-    avaliacao = get_object_or_404(Avaliacao, id=avaliacao_id)
-    if request.user != avaliacao.distribuidor:
-        messages.error(request, 'Você não tem permissão para criar indicadores nesta avaliação.')
+def editar_indicador(request, indicador_id):
+    indicador = get_object_or_404(Indicador, id=indicador_id)
+    if request.user != indicador.avaliacao.distribuidor:
+        messages.error(request, 'Você não tem permissão para editar este indicador.')
         return redirect('avaliacoes:home')
-    return render(request, 'avaliacoes/criar_indicador.html', {'avaliacao': avaliacao})
+    if request.method == 'POST':
+        nome = request.POST.get('nome')
+        if nome:
+            indicador.nome = nome
+            indicador.save()
+            messages.success(request, 'Indicador atualizado com sucesso!')
+    return redirect('avaliacoes:exibir_criar_indicador', avaliacao_id=indicador.avaliacao.id)
 
 @login_required
 def exibir_copiar_indicadores(request, avaliacao_id):
@@ -264,19 +286,7 @@ def copiar_indicadores(request, avaliacao_id):
     return redirect('avaliacoes:detalhes_avaliacao', avaliacao.id)
 
 
-@login_required
-def editar_indicador(request, indicador_id):
-    indicador = get_object_or_404(Indicador, id=indicador_id)
-    if request.user != indicador.avaliacao.distribuidor:
-        messages.error(request, 'Você não tem permissão para editar este indicador.')
-        return redirect('avaliacoes:home')
-    if request.method == 'POST':
-        nome = request.POST.get('nome')
-        if nome:
-            indicador.nome = nome
-            indicador.save()
-            messages.success(request, 'Indicador atualizado com sucesso!')
-    return redirect('avaliacoes:criar_indicador', avaliacao_id=indicador.avaliacao.id)
+
 
 #arquivos
 @login_required
