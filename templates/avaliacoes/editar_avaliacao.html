@@ -1,23 +1,91 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Editar avaliação</h1>
-    <form method="post">
+    <style>
+        .paglogin-form-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 100%;
+        }
+
+        .paglogin-form-box {
+            background: linear-gradient(to top right, white, lightgray);
+            padding: 20px;
+            border-radius: 20px;
+            max-height: 100vh;
+            overflow-y: auto;
+        }
+
+        .avaliacao-box {
+            width: calc(33.33% - 10px);
+            margin-right: 10px;
+        }
+
+        .indicador-box {
+            width: calc(66.66% - 10px);
+        }
+
+        .paglogin-form-box label,
+        .paglogin-form-box input,
+        .paglogin-form-box button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .paglogin-form-box label {
+            color: black;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .paglogin-form-box input,
+        .paglogin-form-box button {
+            border-radius: 10px;
+        }
+
+        .paglogin-form-box button {
+            background: linear-gradient(to right, #1e3d59, #3a506b);
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .paglogin-form-box select {
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+
+    <div class="paglogin-form-container">
+        <div class="paglogin-form-box avaliacao-box">
+            <h1>Editar avaliação</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">Salvar</button>
+            </form>
+        </div>
+
+        <div class="paglogin-form-box indicador-box">
+            <h2>Indicadores</h2>
+            <a href="{% url 'avaliacoes:criar_indicador' avaliacao.id %}">
+                <button>Editar Indicadores</button>
+            </a>
+            {% for dimensao, indicadores in indicadores_por_dimensao.items %}
+                <h3>{{ dimensao }}</h3>
+                {% for indicador in indicadores %}
+                    <p>{{ indicador.nome }}</p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <form action="{% url 'avaliacoes:excluir_avaliacao' avaliacao.id %}" method="post" onsubmit="return confirm('Tem certeza que deseja excluir esta avaliação?')">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salvar</button>
+        <button type="submit">Excluir tudo</button>
     </form>
-
-    <h2>Indicadores</h2>
-    {% for dimensao, indicadores in indicadores_por_dimensao.items %}
-        <h3>{{ dimensao }}</h3>
-        {% for indicador in indicadores %}
-            <p>{{ indicador.nome }} - 
-                <a href="{% url 'avaliacoes:editar_indicador' indicador.id %}">Editar</a> - 
-                <a href="{% url 'avaliacoes:excluir_indicador' indicador.id %}">Excluir</a>
-            </p>
-        {% endfor %}
-    {% endfor %}
-
-    <a href="{% url 'avaliacoes:excluir_avaliacao' avaliacao.id %}" onclick="return confirm('Tem certeza que deseja excluir esta avaliação?')">Excluir tudo</a>
 {% endblock %}

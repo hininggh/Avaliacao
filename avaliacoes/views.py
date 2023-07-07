@@ -197,17 +197,27 @@ def criar_indicador(request, avaliacao_id):
     if request.method == 'POST':
         form = IndicadorForm(request.POST)
         if form.is_valid():
-            indicador = form.save(commit=False)
-            indicador.avaliacao = avaliacao
-            indicador.save()
+            # Cria um novo indicador com os dados do formulário
+            nome = form.cleaned_data['nome']
+            dimensao = form.cleaned_data['dimensao']
+            Indicador.objects.create(nome=nome, dimensao=dimensao, avaliacao=avaliacao)
             messages.success(request, 'Indicador criado com sucesso!')
-            return redirect('avaliacoes:exibir_criar_indicador', avaliacao_id=avaliacao_id)
+            return redirect('avaliacoes:criar_indicador', avaliacao_id=avaliacao.id)
     else:
-        form = IndicadorForm(initial={'avaliacao': avaliacao})
+        form = IndicadorForm()
+
+    # Obtém os indicadores por dimensão
+    indicadores = Indicador.objects.filter(avaliacao=avaliacao)
+    indicadores_por_dimensao = {}
+    for indicador in indicadores:
+        if indicador.dimensao not in indicadores_por_dimensao:
+            indicadores_por_dimensao[indicador.dimensao] = []
+        indicadores_por_dimensao[indicador.dimensao].append(indicador)
 
     return render(request, 'avaliacoes/criar_indicador.html', {
         'avaliacao': avaliacao,
         'form': form,
+        'indicadores_por_dimensao': indicadores_por_dimensao,
     })
 
 
@@ -245,7 +255,7 @@ def excluir_indicador(request, indicador_id):
         # Excluir indicador
         indicador.delete()
         messages.success(request, 'Indicador excluído com sucesso!')
-    return redirect('avaliacoes:exibir_criar_indicador', avaliacao_id=indicador.avaliacao.id)
+    return redirect('avaliacoes:criar_indicador', avaliacao_id=indicador.avaliacao.id)
 
 @login_required
 def editar_indicador(request, indicador_id):
@@ -259,7 +269,7 @@ def editar_indicador(request, indicador_id):
             indicador.nome = nome
             indicador.save()
             messages.success(request, 'Indicador atualizado com sucesso!')
-    return redirect('avaliacoes:exibir_criar_indicador', avaliacao_id=indicador.avaliacao.id)
+    return redirect('avaliacoes:criar_indicador', avaliacao_id=indicador.avaliacao.id)
 
 @login_required
 def exibir_copiar_indicadores(request, avaliacao_id):

@@ -22,7 +22,7 @@ class AvaliacaoForm(forms.ModelForm):
 class IndicadorForm(forms.ModelForm):
     class Meta:
         model = Indicador
-        fields = ('nome', 'dimensao', 'avaliacao')
+        fields = ('nome', 'dimensao')
 
 class ArquivoIndicadorForm(forms.ModelForm):
     class Meta:
