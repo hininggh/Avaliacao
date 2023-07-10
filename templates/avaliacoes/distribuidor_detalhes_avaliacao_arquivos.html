@@ -1,28 +1,89 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<h1>{{ avaliacao.nome }}</h1>
-<p>Inscrição: {{ avaliacao.inscricao }}</p>
-<p>Data de criação: {{ avaliacao.data_criacao }}</p>
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
 
-<h2>Avaliador</h2>
-<p><a href="{% url 'contas:detalhes_usuario' avaliador.id %}">{{ avaliador.name }}</a></p>
+    .box {
+        background-color: #f8f8f8;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
 
-<p><a href="{% url 'avaliacoes:editar_avaliacao' avaliacao.id %}">Editar</a></p>
-<p><a href="{% url 'avaliacoes:distribuidor_detalhes_avaliacao' avaliacao.id %}">Voltar</a></p>
+    .button-group {
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 5px;
+    }
 
-<h2>Indicadores</h2>
-{% for dimensao, indicadores in indicadores_por_dimensao.items %}
-    <h3>{{ dimensao }}</h3>
-    {% for indicador in indicadores %}
-        <h4>{{ indicador.nome }}</h4>
-        {% for arquivo in arquivos %}
-            {% if arquivo.indicador == indicador %}
-                <p><a href="{% url 'avaliacoes:baixar_arquivo_distribuidor' arquivo.id %}">Baixar</a></p>
-            {% endif %}
-        {% endfor %}
+    .button-group h4 {
+        margin-bottom: 0;
+        padding-bottom: 1px;
+    }
+
+    .button-group a {
+        display: inline-block;
+        padding: 10px 15px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+
+    .button-group .btn-baixar {
+        background-image: linear-gradient(to bottom right, #3461eb, #5ec4bf);
+        margin-left: auto;
+        margin-bottom: 1px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+
+    .button-group .spacer {
+        flex-grow: 1;
+        border-bottom: 1px dotted #000;
+        margin: 0 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="box">
+        <h1>{{ avaliacao.nome }}</h1>
+        <p>Inscrição: {{ avaliacao.inscricao }}</p>
+        <p>Data de criação: {{ avaliacao.data_criacao }}</p>
+
+        <div class="button-group">
+            <h2>Exibindo arquivos enviados por:</h2><p><a href="{% url 'contas:detalhes_usuario' avaliador.id %}"> {{ avaliador.name }}</a></p>
+        </div>
+
+        <div class="button-group">
+            <a href="{% url 'avaliacoes:editar_avaliacao' avaliacao.id %}">Editar Avaliação</a>
+            <a href="{% url 'avaliacoes:criar_indicador' avaliacao.id %}">Editar/Criar Indicadores</a>
+            <a href="{% url 'avaliacoes:distribuidor_detalhes_avaliacao' avaliacao.id %}">Voltar</a>
+        </div>
+    </div>
+    <div class="box">
+        <h2>Indicadores Por Dimensão</h2>
+    </div>
+    {% for dimensao, indicadores in indicadores_por_dimensao.items %}
+        <div class="box">
+            <h3>{{ dimensao }}</h3>
+            {% for indicador in indicadores %}
+                <div class="button-group">
+                    <h4>{{ indicador.nome }}</h4>
+                    <span class="spacer"></span>
+                    {% for arquivo in arquivos %}
+                        {% if arquivo.indicador == indicador %}
+                            <a href="{% url 'avaliacoes:baixar_arquivo_distribuidor' arquivo.id %}" class="btn btn-baixar">Baixar</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
     {% endfor %}
-{% endfor %}
-
-<p><a href="{% url 'avaliacoes:criar_indicador' avaliacao.id %}">Criar Indicadores</a></p>
+</div>
 {% endblock %}

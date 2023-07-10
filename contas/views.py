@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.contrib.auth import logout
 from avaliacoes.views import listar_avaliacoes
 from avaliacoes.models import Avaliacao
+from django.contrib.auth.decorators import login_required
 
 
 def logout_view(request):
@@ -59,6 +60,7 @@ def editar_perfil(request):
     return render(request, 'contas/editar_perfil.html', {'form': form})
 
 
+@login_required
 def detalhes_usuario(request, pk=None):
     if pk:
         usuario = CustomUser.objects.get(pk=pk)
@@ -67,9 +69,11 @@ def detalhes_usuario(request, pk=None):
 
     if request.user.user_type in ['distribuidor', 'avaliador']:
         if request.user.user_type == 'distribuidor':
-            avaliacoes = Avaliacao.objects.filter(distribuidor=request.user, avaliadores=usuario)
+            avaliacoes = Avaliacao.objects.filter(distribuidor=request.user)
+            avaliacoes = avaliacoes.filter(avaliadores=usuario)
         else:
-            avaliacoes = Avaliacao.objects.filter(avaliadores=request.user, distribuidor=usuario)
+            avaliacoes = Avaliacao.objects.filter(avaliadores=request.user)
+            avaliacoes = avaliacoes.filter(distribuidor=usuario)
     else:
         avaliacoes = listar_avaliacoes(request)
 

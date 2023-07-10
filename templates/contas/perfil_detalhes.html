@@ -13,7 +13,7 @@
             {% if usuario == request.user %}
                 <a class="geral" href="{% url 'contas:editar_perfil' %}">Editar perfil</a>
             {% endif %}
-            <h2>Avaliações</h2>
+            <h2>Avaliações em comum</h2>
             <ul>
                 {% for avaliacao in avaliacoes %}
                     {% if request.user.user_type == 'distribuidor' %}

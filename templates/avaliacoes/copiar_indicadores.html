@@ -32,10 +32,14 @@
 
            <h2>Copiar indicadores de outra avaliação</h2>
            <ul>
-               {% for avaliacao in avaliacoes %}
+               {% for outra_avaliacao in avaliacoes %}
                    <li>
-                       {{ avaliacao.nome }}
-                       <a href="{% url 'avaliacoes:copiar_indicadores' avaliacao.id %}">Copiar indicadores</a>
+                       {{ outra_avaliacao.nome }}
+                       <form action="{% url 'avaliacoes:copiar_indicadores' outra_avaliacao.id %}" method="post">
+                           {% csrf_token %}
+                           <input type="hidden" name="avaliacao_criada_id" value="{{ avaliacao.id }}">
+                           <button type="submit">Copiar indicadores</button>
+                       </form>
                    </li>
                {% endfor %}
            </ul>

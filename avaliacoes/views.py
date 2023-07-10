@@ -30,6 +30,8 @@ def criar_avaliacao(request):
             avaliacao = form.save(commit=False)
             avaliacao.distribuidor = request.user
             avaliacao.save()
+            # Salvar o ID da avaliação criada em uma variável de sessão
+            request.session['avaliacao_criada_id'] = avaliacao.id
             return redirect('avaliacoes:exibir_copiar_indicadores', avaliacao.id)
     else:
         form = AvaliacaoForm()
@@ -245,18 +247,22 @@ def exibir_copiar_indicadores(request, avaliacao_id):
 
 @login_required
 def copiar_indicadores(request, avaliacao_id):
-    avaliacao = get_object_or_404(Avaliacao, id=avaliacao_id)
-    if request.user != avaliacao.distribuidor:
+    # Ler o ID da avaliação criada a partir da variável de sessão
+    avaliacao_criada_id = request.session.get('avaliacao_criada_id')
+    if not avaliacao_criada_id:
+        messages.error(request, 'Não foi possível encontrar a avaliação criada.')
+        return redirect('avaliacoes:home')
+    avaliacao_criada = get_object_or_404(Avaliacao, id=avaliacao_criada_id)
+    if request.user != avaliacao_criada.distribuidor:
         messages.error(request, 'Você não tem permissão para copiar os indicadores desta avaliação.')
         return redirect('avaliacoes:home')
     if request.method == 'POST':
-        avaliacao_id = request.POST.get('avaliacao_id')
         avaliacao_a_copiar = get_object_or_404(Avaliacao, id=avaliacao_id, distribuidor=request.user)
         indicadores = Indicador.objects.filter(avaliacao=avaliacao_a_copiar)
         for indicador in indicadores:
-            Indicador.objects.create(nome=indicador.nome, dimensao=indicador.dimensao, avaliacao=avaliacao)
+            Indicador.objects.create(nome=indicador.nome, dimensao=indicador.dimensao, avaliacao=avaliacao_criada)
         messages.success(request, 'Indicadores copiados com sucesso!')
-    return redirect('avaliacoes:distribuidor_detalhes_avaliacao', avaliacao.id)
+    return redirect('avaliacoes:criar_indicador', avaliacao_criada.id)
 
 
 

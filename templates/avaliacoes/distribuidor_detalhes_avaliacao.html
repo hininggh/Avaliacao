@@ -1,26 +1,68 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<h1>{{ avaliacao.nome }}</h1>
-<p>Inscrição: {{ avaliacao.inscricao }}</p>
-<p>Data de criação: {{ avaliacao.data_criacao }}</p>
+<style>
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
 
-<h2>Avaliadores</h2>
-<ul>
-    {% for avaliador in avaliadores %}
-        <li><a href="{% url 'avaliacoes:distribuidor_detalhes_avaliacao_arquivos' avaliador.id avaliacao.id %}">{{ avaliador.name }}</a></li>
+    .box {
+        background-color: #f8f8f8;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .button-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .button-group a {
+        display: inline-block;
+        padding: 10px 15px;
+        background-color: #4CAF50;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-right: 10px;
+    }
+</style>
+
+<div class="container">
+    <div class="box">
+        <h1>{{ avaliacao.nome }}</h1>
+        <p>Inscrição: {{ avaliacao.inscricao }}</p>
+        <p>Data de criação: {{ avaliacao.data_criacao }}</p>
+
+        <div class="button-group">
+            <a href="{% url 'avaliacoes:editar_avaliacao' avaliacao.id %}">Editar detalhes Avaliação</a>
+            <a href="{% url 'avaliacoes:criar_indicador' avaliacao.id %}">Editar Indicadores</a>
+        </div>
+    </div>
+    <div class="box">
+        <h2>Escolha um dos avaliadores desta avaliação para ver os arquivos dele</h2>
+        <ul>
+            {% for avaliador in avaliadores %}
+                <div class="button-group a">
+                    <a href="{% url 'avaliacoes:distribuidor_detalhes_avaliacao_arquivos' avaliador.id avaliacao.id %}">{{ avaliador.name }}</a>
+                </div>
+
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="box">
+        <h2>Indicadores Por Dimensão</h2>
+    </div>
+    {% for dimensao, indicadores in indicadores_por_dimensao.items %}
+        <div class="box">
+            <h3>{{ dimensao }}</h3>
+            {% for indicador in indicadores %}
+                <h4>{{ indicador.nome }}</h4>
+            {% endfor %}
+        </div>
     {% endfor %}
-</ul>
-
-<p><a href="{% url 'avaliacoes:editar_avaliacao' avaliacao.id %}">Editar</a></p>
-
-<h2>Indicadores</h2>
-{% for dimensao, indicadores in indicadores_por_dimensao.items %}
-    <h3>{{ dimensao }}</h3>
-    {% for indicador in indicadores %}
-        <h4>{{ indicador.nome }}</h4>
-    {% endfor %}
-{% endfor %}
-
-<p><a href="{% url 'avaliacoes:criar_indicador' avaliacao.id %}">Editar Indicadores</a></p>
+</div>
 {% endblock %}

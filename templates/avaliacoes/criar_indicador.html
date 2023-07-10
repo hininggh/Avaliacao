@@ -48,6 +48,29 @@
 
         .indicador-form button[type="submit"] {
             margin-right: 5px;
+            border-radius: 5px;
+        }
+
+        .btn-editar-avaliacao {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .btn-salvar-indicador {
+            border-radius: 5px;
+        }
+
+        .btn-salvar {
+            background-image: linear-gradient(to bottom right, #3461eb, #5ec4bf);
+        }
+
+        .btn-excluir {
+            background-color: #f44336;
         }
     </style>
 
@@ -55,7 +78,7 @@
         <div class="box">
             <h1>Criar indicadores</h1>
             <h2>{{ avaliacao.nome }}</h2>
-            <a href="{% url 'avaliacoes:editar_avaliacao' avaliacao.id %}">Editar avaliação</a>
+            <a href="{% url 'avaliacoes:editar_avaliacao' avaliacao.id %}" class="btn btn-editar-avaliacao">Editar avaliação</a>
 
             <!-- Formulário para criar um novo indicador -->
             <h3>Novo indicador</h3>
@@ -67,7 +90,7 @@
                         {{ field }}
                     </div>
                 {% endfor %}
-                <input type="submit" value="Salvar Indicador">
+                <input type="submit" value="Salvar Indicador" class="btn btn-salvar btn-salvar-indicador">
             </form>
         </div>
 
@@ -77,14 +100,14 @@
                 <h3>{{ dimensao }}</h3>
                 {% for indicador in indicadores %}
                     <div class="indicador-form">
+                        <input type="text" name="nome" value="{{ indicador.nome }}">
                         <form action="{% url 'avaliacoes:editar_indicador' indicador.id %}" method="post" style="display:inline;">
                             {% csrf_token %}
-                            <input type="text" name="nome" value="{{ indicador.nome }}">
-                            <button type="submit">Salvar</button>
+                            <button type="submit" class="btn btn-salvar">Salvar</button>
                         </form>
                         <form action="{% url 'avaliacoes:excluir_indicador' indicador.id %}" method="post" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit">Excluir</button>
+                            <button type="submit" class="btn btn-excluir">Excluir</button>
                         </form>
                     </div>
                 {% endfor %}

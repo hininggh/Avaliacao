@@ -65,7 +65,7 @@
         </div>
     </div>
 
-    <form action="{% url 'avaliacoes:excluir_avaliacao' avaliacao.id %}" method="post" onsubmit="return confirm('Tem certeza que deseja excluir esta avaliação?')">
+    <form action="{% url 'avaliacoes:excluir_avaliacao' avaliacao.id %}" method="post" onsubmit="return confirm('Tem certeza que deseja excluir esta avaliação?(TODOS ARQUIVOS ENVIADOS RELACIONADOS A ESTA AVALIAÇÃO SERÃO PERDIDOS')">
         {% csrf_token %}
         <button type="submit">Excluir tudo</button>
     </form>
