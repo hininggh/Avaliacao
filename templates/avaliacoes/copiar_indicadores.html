@@ -1,27 +1,44 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Copiar indicadores</h1>
-    <p>Avaliação: {{ avaliacao.nome }}</p>
-    <p>Inscrição: {{ avaliacao.inscricao }}</p>
-    <p>Data de criação: {{ avaliacao.data_criacao }}</p>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-   <h3>
-    <a href="{% url 'avaliacoes:excluir_avaliacao' avaliacao.id %}" onclick="return confirm('Tem certeza que deseja cancelar a criação desta avaliação?')">Cancelar criação</a>
-   </h3>
-    <h3>
-    <a href="{% url 'avaliacoes:criar_indicador' avaliacao.id %}">Vá direto para a criação de novos indicadores</a>
-    <h2/>
+        .box {
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
 
-<h2>Copiar indicadores de outra avaliação</h2>
-    <ul>
-        {% for avaliacao in avaliacoes %}
-            <li>
-                {{ avaliacao.nome }}
-                <a href="{% url 'avaliacoes:copiar_indicadores' avaliacao.id %}">Copiar indicadores</a>
-            </li>
-        {% endfor %}
-    </ul>
+    <div class="container">
+        <div class="box">
+            <h1>Copiar indicadores</h1>
+            <p>Avaliação: {{ avaliacao.nome }}</p>
+            <p>Inscrição: {{ avaliacao.inscricao }}</p>
+            <p>Data de criação: {{ avaliacao.data_criacao }}</p>
 
+           <h3>
+                <a href="{% url 'avaliacoes:excluir_avaliacao' avaliacao.id %}" onclick="return confirm('Tem certeza que deseja cancelar a criação desta avaliação?')">Cancelar criação</a>
+           </h3>
+           <h3>
+                <a href="{% url 'avaliacoes:criar_indicador' avaliacao.id %}">Vá direto para a criação de novos indicadores</a>
+           </h3>
 
+           <h2>Copiar indicadores de outra avaliação</h2>
+           <ul>
+               {% for avaliacao in avaliacoes %}
+                   <li>
+                       {{ avaliacao.nome }}
+                       <a href="{% url 'avaliacoes:copiar_indicadores' avaliacao.id %}">Copiar indicadores</a>
+                   </li>
+               {% endfor %}
+           </ul>
+       </div>
+   </div>
 {% endblock %}

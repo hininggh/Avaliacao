@@ -5,6 +5,8 @@ from .models import CustomUser
 from django.contrib import messages
 from django.contrib.auth import logout
 from avaliacoes.views import listar_avaliacoes
+from avaliacoes.models import Avaliacao
+
 
 def logout_view(request):
     logout(request)
@@ -64,7 +66,10 @@ def detalhes_usuario(request, pk=None):
         usuario = request.user
 
     if request.user.user_type in ['distribuidor', 'avaliador']:
-        avaliacoes = listar_avaliacoes(request).filter(avaliadores=usuario)
+        if request.user.user_type == 'distribuidor':
+            avaliacoes = Avaliacao.objects.filter(distribuidor=request.user, avaliadores=usuario)
+        else:
+            avaliacoes = Avaliacao.objects.filter(avaliadores=request.user, distribuidor=usuario)
     else:
         avaliacoes = listar_avaliacoes(request)
 

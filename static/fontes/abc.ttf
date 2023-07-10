@@ -1,0 +1,4 @@
+@font-face {
+    font-family: 'abc';
+    src: url('/static/fonts/abc.ttf') format('truetype');
+}

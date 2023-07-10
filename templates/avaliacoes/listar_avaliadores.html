@@ -1,11 +1,23 @@
-{# listar_avaliadores.html #}
 {% extends 'base.html' %}
 
 {% block content %}
+    <style>
+        .home-btn-azul {
+            display: inline-block;
+            background-image: linear-gradient(to bottom right, #edf5f4, #5ec4bf);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 10px;
+            width: 200px;
+            text-align: center;
+        }
+    </style>
     <h1>Avaliadores</h1>
     <ul>
         {% for avaliador in avaliadores %}
-            <li><a href="{% url 'contas:perfil_detalhes' avaliador.pk %}">{{ avaliador.name }}</a></li>
+            <li><a class="home-btn-azul" href="{% url 'contas:detalhes_usuario' avaliador.pk %}">{{ avaliador.name }}</a></li>
         {% empty %}
             <li>Nenhum avaliador encontrado.</li>
         {% endfor %}

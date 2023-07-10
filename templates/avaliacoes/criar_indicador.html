@@ -1,33 +1,94 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Criar indicadores</h1>
-    <h2>{{ avaliacao.nome }}</h2>
-    <a href="{% url 'avaliacoes:editar_avaliacao' avaliacao.id %}">Editar avaliação</a>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
-    <!-- Formulário para criar um novo indicador -->
-    <h3>Novo indicador</h3>
-    <form action="{% url 'avaliacoes:criar_indicador' avaliacao.id %}" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salvar Indicador</button>
-    </form>
+        .box {
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
 
-    <!-- Sessões de indicadores por dimensão -->
-    {% for dimensao, indicadores in indicadores_por_dimensao.items %}
-        <h3>{{ dimensao }}</h3>
-        {% for indicador in indicadores %}
-            <div>
-                <form action="{% url 'avaliacoes:editar_indicador' indicador.id %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <input type="text" name="nome" value="{{ indicador.nome }}">
-                    <button type="submit">Salvar</button>
-                </form>
-                <form action="{% url 'avaliacoes:excluir_indicador' indicador.id %}" method="post" style="display: inline;">
-                    {% csrf_token %}
-                    <button type="submit">Excluir</button>
-                </form>
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            flex-basis: 30%;
+            margin-right: 10px;
+        }
+
+        .form-group input,
+        .form-group select {
+            flex-basis: 70%;
+        }
+
+        .form-group input[type="submit"] {
+            margin-left: auto;
+        }
+
+        .indicador-form {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .indicador-form input[type="text"] {
+            flex-grow: 1;
+            margin-right: 5px;
+        }
+
+        .indicador-form button[type="submit"] {
+            margin-right: 5px;
+        }
+    </style>
+
+    <div class="container">
+        <div class="box">
+            <h1>Criar indicadores</h1>
+            <h2>{{ avaliacao.nome }}</h2>
+            <a href="{% url 'avaliacoes:editar_avaliacao' avaliacao.id %}">Editar avaliação</a>
+
+            <!-- Formulário para criar um novo indicador -->
+            <h3>Novo indicador</h3>
+            <form action="{% url 'avaliacoes:criar_indicador' avaliacao.id %}" method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <input type="submit" value="Salvar Indicador">
+            </form>
+        </div>
+
+        <!-- Sessões de indicadores por dimensão -->
+        {% for dimensao, indicadores in indicadores_por_dimensao.items %}
+            <div class="box">
+                <h3>{{ dimensao }}</h3>
+                {% for indicador in indicadores %}
+                    <div class="indicador-form">
+                        <form action="{% url 'avaliacoes:editar_indicador' indicador.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="text" name="nome" value="{{ indicador.nome }}">
+                            <button type="submit">Salvar</button>
+                        </form>
+                        <form action="{% url 'avaliacoes:excluir_indicador' indicador.id %}" method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit">Excluir</button>
+                        </form>
+                    </div>
+                {% endfor %}
             </div>
         {% endfor %}
-    {% endfor %}
+    </div>
 {% endblock %}

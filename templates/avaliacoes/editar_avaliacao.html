@@ -2,75 +2,56 @@
 
 {% block content %}
     <style>
-        .paglogin-form-container {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: flex-start;
-            height: 100%;
-        }
-
-        .paglogin-form-box {
-            background: linear-gradient(to top right, white, lightgray);
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
             padding: 20px;
-            border-radius: 20px;
-            max-height: 100vh;
-            overflow-y: auto;
         }
 
-        .avaliacao-box {
-            width: calc(33.33% - 10px);
-            margin-right: 10px;
+        .box {
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
         }
 
-        .indicador-box {
-            width: calc(66.66% - 10px);
-        }
-
-        .paglogin-form-box label,
-        .paglogin-form-box input,
-        .paglogin-form-box button {
-            display: block;
-            width: 100%;
+        .form-group {
+            display: flex;
+            align-items: center;
             margin-bottom: 10px;
         }
 
-        .paglogin-form-box label {
-            color: black;
-            font-weight: bold;
-            text-align: center;
+        .form-group label {
+            flex-basis: 30%;
+            margin-right: 10px;
         }
 
-        .paglogin-form-box input,
-        .paglogin-form-box button {
-            border-radius: 10px;
+        .form-group input,
+        .form-group select {
+            flex-basis: 70%;
         }
 
-        .paglogin-form-box button {
-            background: linear-gradient(to right, #1e3d59, #3a506b);
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            color: white;
-        }
-
-        .paglogin-form-box select {
-            display: block;
-            margin: 0 auto;
+        .form-group input[type="submit"] {
+            margin-left: auto;
         }
     </style>
 
-    <div class="paglogin-form-container">
-        <div class="paglogin-form-box avaliacao-box">
+    <div class="container">
+        <div class="box">
             <h1>Editar avaliação</h1>
             <form method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
                 <button type="submit">Salvar</button>
             </form>
         </div>
 
-        <div class="paglogin-form-box indicador-box">
+        <div class="box">
             <h2>Indicadores</h2>
             <a href="{% url 'avaliacoes:criar_indicador' avaliacao.id %}">
                 <button>Editar Indicadores</button>

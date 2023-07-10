@@ -12,6 +12,7 @@ from io import BytesIO
 
 
 
+
 @login_required
 def home(request):
     if request.user.user_type == 'distribuidor':
@@ -34,44 +35,6 @@ def criar_avaliacao(request):
         form = AvaliacaoForm()
     return render(request, 'avaliacoes/criar_avaliacao.html', {'form': form})
 
-@login_required
-def detalhes_avaliacao(request, avaliacao_id, avaliador_id=None):
-    avaliacao = get_object_or_404(Avaliacao, id=avaliacao_id)
-    if request.user.user_type == 'distribuidor' and request.user != avaliacao.distribuidor:
-        messages.error(request, 'Você não tem permissão para ver os detalhes desta avaliação.')
-        return redirect('avaliacoes:home')
-    if request.user.user_type == 'avaliador' and request.user not in avaliacao.avaliadores.all():
-        messages.error(request, 'Você não tem permissão para ver os detalhes desta avaliação.')
-        return redirect('avaliacoes:home')
-
-    avaliador_selecionado = None
-    if request.user.user_type == 'distribuidor' and avaliador_id:
-        avaliador_selecionado = get_object_or_404(CustomUser, id=avaliador_id, user_type='avaliador', avaliacoes=avaliacao)
-
-    indicadores_por_dimensao = {}
-    for dimensao in Indicador.DIMENSOES:
-        indicadores_por_dimensao[dimensao[0]] = Indicador.objects.filter(avaliacao=avaliacao, dimensao=dimensao[0])
-
-    arquivos_por_indicador = {}
-    if avaliador_selecionado:
-        arquivos_por_indicador = ArquivoIndicador.objects.filter(indicador__avaliacao=avaliacao, avaliador=avaliador_selecionado).select_related('indicador')
-
-    capa_enviada = None
-    if request.user.user_type == 'avaliador':
-        capa_enviada = CapaAvaliacao.objects.filter(avaliacao=avaliacao, avaliador=request.user).first()
-
-    if request.user.user_type == 'distribuidor':
-        template_name = 'avaliacoes/distribuidor_detalhes_avaliacao.html'
-    else:
-        template_name = 'avaliacoes/avaliador_detalhes_avaliacao.html'
-
-    return render(request, template_name, {
-        'avaliacao': avaliacao,
-        'indicadores_por_dimensao': indicadores_por_dimensao,
-        'avaliador_selecionado': avaliador_selecionado,
-        'arquivos_por_indicador': arquivos_por_indicador,
-        'capa_enviada': capa_enviada,
-    })
 
 
 @login_required
@@ -104,7 +67,7 @@ def editar_avaliacao(request, avaliacao_id):
         if form.is_valid():
             form.save()
             messages.success(request, 'Avaliação atualizada com sucesso!')
-            return redirect('avaliacoes:detalhes_avaliacao', avaliacao.id)
+            return redirect('avaliacoes:distribuidor_detalhes_avaliacao', avaliacao.id)
     else:
         form = AvaliacaoForm(instance=avaliacao)
     indicadores_por_dimensao = {}
@@ -293,7 +256,7 @@ def copiar_indicadores(request, avaliacao_id):
         for indicador in indicadores:
             Indicador.objects.create(nome=indicador.nome, dimensao=indicador.dimensao, avaliacao=avaliacao)
         messages.success(request, 'Indicadores copiados com sucesso!')
-    return redirect('avaliacoes:detalhes_avaliacao', avaliacao.id)
+    return redirect('avaliacoes:distribuidor_detalhes_avaliacao', avaliacao.id)
 
 
 

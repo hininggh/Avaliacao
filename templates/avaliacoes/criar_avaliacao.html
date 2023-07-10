@@ -1,11 +1,54 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>Criar avaliação</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Salvar e ir para criação de indicadores</button>
-    </form>
+    <style>
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
 
+        .box {
+            background-color: #f8f8f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            flex-basis: 30%;
+            margin-right: 10px;
+        }
+
+        .form-group input,
+        .form-group select {
+            flex-basis: 70%;
+        }
+
+        .form-group input[type="submit"] {
+            margin-left: auto;
+        }
+    </style>
+
+    <div class="container">
+        <div class="box">
+            <h1>Criar avaliação</h1>
+            <form method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <button type="submit">Salvar e ir para criação de indicadores</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}

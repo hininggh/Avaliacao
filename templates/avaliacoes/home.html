@@ -1,25 +1,58 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+    <style>
+        .home-btn-azul, .home-btn-login {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 10px;
+            width: 200px;
+            text-align: center;
+        }
+        .home-btn-azul {
+            background-image: linear-gradient(to bottom right, #00008B , #00FFFF);
+            color: white; font-family: 'Arial', sans-serif;
+        }
+        .home-btn-login {
+            background-image: linear-gradient(to bottom right, #5ec4bf , #258a85);
+            color: white;
+            font-family: 'Verdana', sans-serif;
+        }
+        .container {
+            display: flex;
+        }
+        .avaliacoes, .pdf {
+            flex: 1;
+        }
+    </style>
     <h1>Bem-vindo, {{ user.username }}!</h1>
-    {% if user.user_type == 'distribuidor' %}
-        <h2>Distribuidor</h2>
-        <a href="{% url 'avaliacoes:criar_avaliacao' %}">Criar avaliação</a><br>
-        <a href="{% url 'avaliacoes:listar_avaliadores' %}">Ver avaliadores cadastrados</a><br>
-        <h3>Minhas avaliações:</h3>
-        <ul>
-            {% for avaliacao in avaliacoes %}
-                <li><a href="{% url 'avaliacoes:distribuidor_detalhes_avaliacao' avaliacao.id %}">{{ avaliacao.nome }}</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <h2>Avaliador</h2>
-        <h3>Minhas avaliações:</h3>
-        <ul>
-            {% for avaliacao in avaliacoes %}
-                <li><a href="{% url 'avaliacoes:avaliador_detalhes_avaliacao' avaliacao.id %}">{{ avaliacao.nome }}</a></li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+    <div class="container">
+        <div class="avaliacoes">
+            {% if user.user_type == 'distribuidor' %}
+                <h2>Distribuidor</h2>
+                <a class="home-btn-azul" href="{% url 'avaliacoes:criar_avaliacao' %}">Criar avaliação</a><br>
+                <a class="home-btn-azul" href="{% url 'avaliacoes:listar_avaliadores' %}">Ver avaliadores cadastrados</a><br>
+                <h3>Minhas avaliações:</h3>
+                <ul>
+                    {% for avaliacao in avaliacoes %}
+                        <li><a class="home-btn-login" href="{% url 'avaliacoes:distribuidor_detalhes_avaliacao' avaliacao.id %}">{{ avaliacao.nome }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <h2>Avaliador</h2>
+                <h3>Minhas avaliações:</h3>
+                <ul>
+                    {% for avaliacao in avaliacoes %}
+                        <li><a class="home-btn-login" href="{% url 'avaliacoes:avaliador_detalhes_avaliacao' avaliacao.id %}">{{ avaliacao.nome }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        <div class="pdf">
+            <embed src="{% static 'pdf/curso_autorizacao.pdf' %}" width="800" height="900" type="application/pdf">
+        </div>
+    </div>
 {% endblock %}
-
