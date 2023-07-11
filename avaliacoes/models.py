@@ -1,6 +1,4 @@
 from django.db import models
-
-from django.db import models
 from contas.models import CustomUser
 
 class Avaliacao(models.Model):
