@@ -14,6 +14,55 @@
             border-radius: 10px;
             margin-bottom: 20px;
         }
+
+        .button-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .button-group a {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .lista-btn-azul {
+            background-image: linear-gradient(to bottom right, #3461eb, #5ec4bf);
+            margin-left: auto;
+            margin-bottom: 1px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        .evaluation-item {
+          display:flex;
+          align-items:flex-end;
+          justify-content:space-between;
+          margin-bottom:10px
+        }
+
+        .evaluation-item span {
+          flex-grow:1;
+          border-bottom:dotted 1px black;
+          margin-left:10px;
+          margin-right:10px
+        }
+
+        .btn-copiar {
+          background-image: linear-gradient(to bottom right, #3461eb, #5ec4bf);
+          padding-top: 5px;
+          padding-bottom: 5px;
+          border-radius:5px;
+          color:white;
+          text-decoration:none;
+          border:none
+        }
+
     </style>
 
     <div class="container">
@@ -22,27 +71,26 @@
             <p>Avaliação: {{ avaliacao.nome }}</p>
             <p>Inscrição: {{ avaliacao.inscricao }}</p>
             <p>Data de criação: {{ avaliacao.data_criacao }}</p>
-
-           <h3>
-                <a href="{% url 'avaliacoes:excluir_avaliacao' avaliacao.id %}" onclick="return confirm('Tem certeza que deseja cancelar a criação desta avaliação?')">Cancelar criação</a>
-           </h3>
-           <h3>
-                <a href="{% url 'avaliacoes:criar_indicador' avaliacao.id %}">Vá direto para a criação de novos indicadores</a>
-           </h3>
-
+            <div class="button-group">
+               <h3>
+                    <a href="{% url 'avaliacoes:excluir_avaliacao' avaliacao.id %}" onclick="return confirm('Tem certeza que deseja cancelar a criação desta avaliação?')">Cancelar criação</a>
+               </h3>
+               <h3>
+                    <a href="{% url 'avaliacoes:criar_indicador' avaliacao.id %}">Vá direto para a criação de novos indicadores</a>
+               </h3>
+            </div>
            <h2>Copiar indicadores de outra avaliação</h2>
-           <ul>
-               {% for outra_avaliacao in avaliacoes %}
-                   <li>
-                       {{ outra_avaliacao.nome }}
-                       <form action="{% url 'avaliacoes:copiar_indicadores' outra_avaliacao.id %}" method="post">
-                           {% csrf_token %}
-                           <input type="hidden" name="avaliacao_criada_id" value="{{ avaliacao.id }}">
-                           <button type="submit">Copiar indicadores</button>
-                       </form>
-                   </li>
-               {% endfor %}
-           </ul>
+           {% for outra_avaliacao in avaliacoes %}
+               <div class="evaluation-item">
+                   {{ outra_avaliacao.nome }}
+                   <span></span>
+                   <form action="{% url 'avaliacoes:copiar_indicadores' outra_avaliacao.id %}" method="post">
+                       {% csrf_token %}
+                       <input type="hidden" name="avaliacao_criada_id" value="{{ avaliacao.id }}">
+                       <button class="btn-copiar" type="submit">Copiar indicadores</button>
+                   </form>
+               </div>
+           {% endfor %}
        </div>
    </div>
 {% endblock %}

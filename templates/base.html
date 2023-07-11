@@ -4,6 +4,7 @@
 <head>
     <title>Projeto Avaliação</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/estilo.css' %}">
+    {% block extrahead %}{% endblock %}
 </head>
 <body class="{% if user.is_authenticated %}logado{% endif %} tudoestilo" style="background-image: url(
     {% if user.is_authenticated and user.user_type == 'avaliador' %}

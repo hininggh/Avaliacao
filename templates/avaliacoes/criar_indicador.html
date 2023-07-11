@@ -100,9 +100,9 @@
                 <h3>{{ dimensao }}</h3>
                 {% for indicador in indicadores %}
                     <div class="indicador-form">
-                        <input type="text" name="nome" value="{{ indicador.nome }}">
-                        <form action="{% url 'avaliacoes:editar_indicador' indicador.id %}" method="post" style="display:inline;">
+                        <form action="{% url 'avaliacoes:editar_indicador' indicador.id %}" method="post">
                             {% csrf_token %}
+                            <input type="text" name="nome" value="{{ indicador.nome }}">
                             <button type="submit" class="btn btn-salvar">Salvar</button>
                         </form>
                         <form action="{% url 'avaliacoes:excluir_indicador' indicador.id %}" method="post" style="display:inline;">

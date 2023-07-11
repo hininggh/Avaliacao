@@ -2,7 +2,7 @@
 
 {% block content %}
     <style>
-        .home-btn-azul {
+        .lista-btn-azul {
             display: inline-block;
             background-image: linear-gradient(to bottom right, #3461eb, #5ec4bf);
             color: white;
@@ -17,7 +17,7 @@
     <h1>Avaliadores</h1>
     <ul>
         {% for avaliador in avaliadores %}
-            <li><a class="home-btn-azul" href="{% url 'contas:detalhes_usuario' avaliador.pk %}">{{ avaliador.name }}</a></li>
+            <li><a class="lista-btn-azul" href="{% url 'contas:detalhes_usuario' avaliador.pk %}">{{ avaliador.name }}</a></li>
         {% empty %}
             <li>Nenhum avaliador encontrado.</li>
         {% endfor %}
