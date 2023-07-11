@@ -45,6 +45,7 @@
                     <div class="form-group">
                         {{ field.label_tag }}
                         {{ field }}
+                        {{ field.errors }}
                     </div>
                 {% endfor %}
                 <button type="submit">Salvar e ir para criação de indicadores</button>

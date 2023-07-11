@@ -2,7 +2,6 @@ from django import forms
 from .models import Avaliacao, Indicador, ArquivoIndicador, CapaAvaliacao
 from contas.models import CustomUser
 
-
 class AvaliacaoForm(forms.ModelForm):
     avaliadores = forms.ModelMultipleChoiceField(
         queryset=CustomUser.objects.filter(user_type='avaliador'),
@@ -18,6 +17,12 @@ class AvaliacaoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['avaliadores'].label_from_instance = lambda obj: obj.name
+
+    def clean(self):
+        cleaned_data = super().clean()
+        avaliadores = cleaned_data.get('avaliadores')
+        if not avaliadores:
+            self.add_error('avaliadores', 'Selecione pelo menos um avaliador.')
 
 class IndicadorForm(forms.ModelForm):
     class Meta:
